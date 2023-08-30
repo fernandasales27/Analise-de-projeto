@@ -42,7 +42,7 @@ public class Main {
 		/*imprimirSaldoMedio(6);*/
 		
 		//5:
-		imprimirClientesComPoupanca();
+		//imprimirClientesComPoupanca();
 		
 		//6:
         /*System.out.println(getEstadoClientes(25));*/
