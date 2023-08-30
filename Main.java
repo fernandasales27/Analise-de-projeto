@@ -39,7 +39,7 @@ public class Main {
 		//imprimirPaisClienteMaisRico();
 		
 		//4:
-		/*imprimirSaldoMedio(6);*/
+		//imprimirSaldoMedio(6);
 		
 		//5:
 		//imprimirClientesComPoupanca();
@@ -61,7 +61,8 @@ public class Main {
 		
 		//11:
 		/*transferir(198, 576, 594, 200);*/
-		
+		//12
+		System.out.println(getContasConjuntas(service.listClients()));
 		//13:
 		/*System.out.println(getSomaContasEstado("State 6"));*/
 		
@@ -73,7 +74,7 @@ public class Main {
 		
 		//16:
 		/*System.out.println(getFatorial(7));*/
-		
+		//System.out.println(getFatorial(0));
 	}
 	
 	/**
@@ -107,13 +108,12 @@ public class Main {
 	 * com o maior saldo somando todas as suas contas.
 	 */
 	public static void imprimirPaisClienteMaisRico() {
-		service
-		.listClients()
+		System.out.println(service
+		.listAccounts()
 		.stream()
-		.peek((c->c.getAccounts().stream().mapToDouble(a->a.getBalance()).sum();
-		.peek(c->c.getAdress().stream().getCountry));
-	
-	//.forEach(c-> System.out.println(c.getName()  +" - "+ c.getAddress().stream().mapToString(a->a.getCountry()).stream().mapToDouble(a->a.getBalance()).max()));
+		.max((a,b)->Double.compare(a.getBalance(), b.getBalance())).get()
+		.getClient().getAddress().getCountry());
+		
 
 	}
 	
@@ -122,16 +122,13 @@ public class Main {
 	 * @param agency
 	 */
 	public static void imprimirSaldoMedio(int agency) {
-		service
+		System.out.println(service
 		.listAccounts()
 		.stream()
-		.filter(c->c.getAgency()==agency)
-		//.forEach(c-> System.out.println(c.getBalance()).average().orElse(0.0));
-		.mapToDouble(c->c.getBalance()).average().orElse(0.0);
+		.filter(a->a.getAgency()==agency)
+		.mapToDouble(a->a.getBalance()).average().orElse(0.0));
 		
-		//.filter(c-> c.getAgency().stream().average())
-		//.map(c->c.getAccounts().g)
-		//.forEach(c-> System.out.println(c.getAccounts().stream().mapToDouble(a->a.getAgency().getBalace())));
+		
 		
 		
 		
@@ -245,11 +242,23 @@ public class Main {
 	 * @param value - valor da transfer�ncia
 	 */
 	public static void transferir(int agency, int numberSource, int numberTarget, double value) {
-		service
-		.listAccounts()
-		.stream()
-		.filter(a->a.getAgency()== agency && a.getNumber()==numberSource && a.getNumber()== numberTarget)
-		.forEach(a->a.this.numberSource.);
+		Account source=service.listAccounts().stream()
+		.filter(cs->cs.getAgency()== agency && cs.getNumber()==numberSource)
+		.findAny().orElse(null);
+		
+		Account target=service.listAccounts().stream()
+		.filter(ct->ct.getAgency()==agency && ct.getNumber()== numberTarget)
+		.findAny().orElse(null);
+		
+		if(source!=null && target!=null) {
+			source.setBalance(source.getBalance()-value);
+			target.setBalance(target.getBalance()+value);
+			System.out.println("operação realizada");
+		}else {
+			System.out.println("não foi possivel realizar a operação");
+		}
+			
+		
 	}
 	
 	/**
@@ -287,7 +296,14 @@ public class Main {
 	 * @return Retorna um array com os e-mails de todos os clientes que possuem contas conjuntas
 	 */
 	public static String[] getEmailsClientesContasConjuntas() {
-		throw new UnsupportedOperationException();
+		//throw new UnsupportedOperationException();
+		return
+				service
+				.listAccounts()
+				.stream()
+				.filter(c-> AccountEnum.JOINT.equals(c.getType()))
+				.map(c->c.getClient().getEmail())
+				.toArray(String[]::new);
 	}
 	
 	/**
@@ -296,7 +312,8 @@ public class Main {
 	 * @return Retorna se o n�mero � primo ou n�o
 	 */
 	public static boolean isPrimo(int number) {
-		//throw new UnsupportedOperationException();
+		return IntStream.rangeClosed(2, number-1).noneMatch(n -> number%n==0);
+		
 	}
 	
 	
@@ -306,6 +323,7 @@ public class Main {
 	 * @return Retorna o fatorial do n�mero
 	 */
 	public static int getFatorial(int number) {
-		throw new UnsupportedOperationException();
+		return IntStream.rangeClosed(2, number).reduce(1,(a,b)-> a*b);
 	}
+
 }
