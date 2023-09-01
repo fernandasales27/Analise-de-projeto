@@ -1,2 +1,2 @@
 # Stream
- exercicio
+ exercicio sobre streams Java
